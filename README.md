@@ -1,40 +1,55 @@
-<!-- Automatización de Control de ACPM con n8n y Google Sheets
+<!--# Sistema de Automatización para la Gestión de Flota y Control de ACPM
 
- Sistema automatizado para el control de combustible, rendimiento de flota y cálculo de kilometraje anterior en tiempo real, conectando flujos de datos en n8n con Google Sheets.
+## Resumen del proyecto
 
- Descripción del Proyecto
-Este proyecto resuelve uno de los retos más comunes al integrar bases de datos en la nube con hojas de cálculo: el seguimiento histórico del odómetro por vehículo (# INTERNO) sin perder precisión en los cálculos dinámicos de consumo, diferencia de kilometraje y rendimiento por galón.
+Este proyecto implementa un flujo de trabajo automatizado para la gestión integral de combustible (ACPM) y el control de flota vehicular. Desarrollado mediante **n8n** y sincronizado con **Google Sheets**, el sistema elimina los procesos de registro manual, garantiza la integridad de los datos de consumo y automatiza el cálculo de métricas de rendimiento por vehículo.
 
- Arquitectura y Tecnologías
-- n8n: Orquestador de flujos de trabajo e inserción automatizada de registros.
-- Google Sheets: Base de datos relacional en nube y motor de visualización (Tablas oficiales de Google Sheets).
-- Fórmulas Avanzadas: Implementación de funciones nativas de búsqueda (BUSCARX) optimizadas para el control operativo de la flota.
+---
 
- Estructura de la Tabla
-La hoja de cálculo está diseñada con las siguientes columnas operativas:
-1. FECHA: Fecha del registro de tanqueo.
-2. HORA: Hora exacta de la operación.
-3. #INTERNO: Identificador único del vehículo (bus).
-4. GALONES: Cantidad de ACPM suministrada.
-5. KM ANTERIOR: Último kilometraje registrado del vehículo (obtenido mediante lógica de búsqueda inversa).
-6. KM ACTUAL: Kilometraje reportado en el tanqueo actual.
-7. DIFERENCIA: Recorrido en kilómetros desde el último tanqueo.
-8. RENDIMIENTO: Eficiencia (Km / Galón).
-9. SERVICIO: Tipo de ruta (Metropolitano, Alimentador, etc.).
-10. OBSERVACIONES: Notas adicionales del operador o estación.
+## 1. El Reto Operativo (Definición del Problema)
 
-## Lógica Clave (El Reto del Proyecto)
-Principalmente, la creación de esta automatización y su lógica de búsqueda se diseñaron con un propósito crítico: **eliminar los errores humanos en el registro del kilometraje al tanquear**. 
+En la gestión de flotas, el ingreso manual de datos por parte de los conductores o personal operativo representa un punto crítico de fallas:
 
-En la operación diaria, un error al digitar el odómetro actual provocaba fallos graves en toda la hoja de cálculo y en las métricas de rendimiento. Para garantizar precisión y evitar que este problema se repitiera, se configuró una lógica de búsqueda exacta que rastrea de forma automática el último registro histórico de cada unidad:
-=SI.ERROR(BUSCARX(C2, C1:C$2, F1:F$2, 0, 0, -1), 0)
+* **Error Humano en Kilometraje:** Transcripción incorrecta o inconsistente de los odómetros al momento del despacho de ACPM.
+* **Corrupción de Métricas:** Lecturas erróneas de kilometraje distorsionan el cálculo de rendimiento ($km/galón$), imposibilitando la detección de anomalías o consumos atípicos.
+* **Carga Administrativa:** Necesidad de auditoría manual constante para corregir inconsistencias históricas en las hojas de cálculo.
 
-Esto permite mantener un historial limpio, prevenir saltos de datos erróneos y asegurar que métricas vitales como el consumo y la diferencia de kilometraje se calculen siempre con absoluta precisión.
+---
 
-Configuración del Flujo en n8n
-- Captura de datos operativos hacia el sistema.
-- Inyección estructurada de filas en Google Sheets asegurando la integridad de las columnas clave.
-- Sincronización de variables de rendimiento y control de flota.
+## 2. Arquitectura de la Solución
 
-Licencia y Derechos de Autor
-© 2026. Todos los derechos reservados. Este proyecto es una obra original de autoría propia destinada a la gestión y optimización de flotas. Queda prohibida su reproducción comercial no autorizada.  -->
+Para mitigar los errores operativos, se diseñó una solución desacoplada que valida y procesa la información antes de consolidar el registro definitivo:
+
+1. **Captura y Orquestación (n8n):** Servidor local n8n ejecutado en entorno contenedorizado (Docker) encargada de recibir las peticiones, estructurar la información y aplicar reglas de validación en tiempo real.
+2. **Capa de Almacenamiento y Cálculo (Google Sheets):** Hoja de cálculo centralizada que actúa como base de datos operacional.
+3. **Validación Histórica de Odómetro:** Implementación de la fórmula avanzada `=SI.ERROR(BUSCARX(...))` para rastrear automáticamente el último kilometraje válido registrado de cada vehículo específico, garantizando continuidad en la secuencia histórica independientemente del orden de ingreso.
+
+---
+
+## 3. Impacto y Beneficios de Negocio
+
+* **100% de Integridad de Datos:** Eliminación total de inconsistencias por saltos de kilometraje o lecturas inferiores a la última registrada.
+* **Trazabilidad Automática:** Cálculo preciso del consumo real por vehículo sin requerir intervención o revisión humana.
+* **Escalabilidad:** Infraestructura preparada para procesar volúmenes crecientes de despachos sin incrementar costos operativos.
+
+---
+
+## 4. Estructura del Repositorio
+
+* `README.md`: Documentación técnica de la solución y lógica del sistema.
+* `workflow-acpm.json`: Flujo de trabajo exportado de n8n para auditoría o despliegue en nuevos entornos (opcional).
+
+---
+
+## 5. Contacto y Demostración
+
+Para coordinar una demostración en vivo del flujo en n8n o discutir detalles sobre la arquitectura implementada, puede ponerse en contacto a través de los siguientes canales:
+
+* **LinkedIn:** [Enlace a tu perfil de LinkedIn]
+* **Correo Electrónico:** tuemail@dominio.com
+
+---
+
+## Aviso Legal y Derechos de Autor
+
+© 2026. Todos los derechos reservados. Queda prohibida la reproducción, distribución o modificación total o parcial de este material sin la autorización expresa y por escrito del autor. -->
